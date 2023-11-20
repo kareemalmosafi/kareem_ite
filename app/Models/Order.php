@@ -19,11 +19,11 @@ class Order extends Model
     ];
     public function warehouse()
     {
-        return $this->belongsTo('App/Models/User');
+        return $this->belongsTo('App/Models/User','warehouse_id');
     }
 
     public function pharmacie()
     {
-        return $this->belongsTo('App/Models/User');
+        return $this->belongsTo('App/Models/User','pharmacies_id');
     }
 }

@@ -15,21 +15,48 @@ class authController extends Controller
    public function register(Request $request)
    {
     $validator=validator::make( $request->all(),[
-       // 'name'=>'required|',
+        'name'=>'required',
         'email'=>'required|email',
         'password'=>'required|min:8'
     ]);
     if($validator->fails())
     {
-        return "error";
+        return response()->json([
+            'status'=>'0',
+            'message'=>'you must insert all information'
+
+        ]);
 
     }
-    $input = $request->all();
+    /*$input = $request->all();
     $input['password'] = Hash::make($input['password']);
-    $warehouse = User::create($input);
+    $input['admin']=true;
+*/
+
+$data=[
+    'name'=>$request->name,
+    'email'=>$request->email,
+    'password'=>$request->password,
+    'admin'=>true,
+];
+
+    $warehouse = User::create([
+        'name'=>$request->name,
+        'email'=>$request->email,
+        'password'=>$request->password,
+        'admin'=>true,
+    ]);
+
     $success['token'] = $warehouse->createToken('kareem')->accessToken;
     $success['name'] = $warehouse->name;
-    return "sucees";
+    return  response()->json([
+        'status'=>'1',
+        'message'=>'Registerd Succsesfully',
+        'name'=>$success['name'],
+       'token'=> $success['token'],
+       'admin'=> $warehouse['admin'],
+
+    ]);
    }
 
 
@@ -40,11 +67,23 @@ class authController extends Controller
         $warehouse = Auth::user();
         $success['token'] = $warehouse->createToken('kareem')->accessToken;
         $success['name'] = $warehouse->name;
-        return "success";
+
+        return  response()->json([
+            'status'=>'1',
+            'message'=>'login Succsesfully',
+            'name'=>$success['name'],
+            'token'=> $success['token'],
+    
+        ]);
+
     }
 
    else{
-        return "error";
+        return response()->json([
+            'status'=>'0',
+            'message'=>'login failed'
+
+        ]);
     }
    }
 
@@ -53,8 +92,18 @@ class authController extends Controller
 
    public function logout()
    {
+/*
+auth::user()->currentAccessToken()->delete();
+
+return  response()->json([
+    'status'=>'1',
+    'message'=>'logout Succsesfully',
+    
+
+]);*/
+
     Session::flush();
-    Auth::logout();
+  
     if(Auth::logout())
     {
     return response()->json([
@@ -66,4 +115,5 @@ else
         'error'=>'dddd'],401);
 }
    }
+
    }

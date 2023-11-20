@@ -18,7 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'nubmer',
+        'number',
         'email',
         'password',
     ];
@@ -49,5 +49,9 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany('App/Modles/Order');
+    }
+    public function favorite()
+    {
+        return $this->hasMany('App/Models/Favorite');
     }
 }
